@@ -24,6 +24,7 @@ $(document).ready(function() {
       } else {
         
         // Refresh location table
+        refreshLocationTable();
         
       }
       
@@ -133,8 +134,46 @@ $(document).ready(function() {
   }
 
   function refreshLocationTable() {
-      // Logic to refresh the location table
-      // Fetch updated location data via AJAX and update the displayed location data
+      $.ajax({
+        url: "libs/php/getLocationById.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          id: 2
+        },
+        success: function(result) {
+          console.log("Success! Result: ", result);
+
+          if(result.status.code === "200") {
+            let locationData = result.data.location;
+            console.log(locationData);
+
+            $("#locations-tab-pane table tbody").html('');
+
+            locationData.forEach(function(location) {
+              $("#locations-tab-pane table tbody").append(
+                '<tr>' +
+                '<td class="align-middle text-nowrap">' + location.name + '</td>' +
+                '<td class="align-middle text-end text-nowrap">' +
+                '<button type="button" class="btn btn-primary btn-sm">' +
+                '<i class="fa-solid fa-pencil fa-fw"></i>' +
+                '</button>' +
+                '<button type="button" class="btn btn-primary btn-sm">' +
+                '<i class="fa-solid fa-trash fa-fw"></i>' +
+                '</button>' +
+                '</td>' +
+                '</tr>'
+              )
+            })
+
+          } else {
+            console.log("Error: ", result.status.description);
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log(" Error fetching location data: ", errorThrown);
+        }
+      })
   }
   
   $("#filterBtn").click(function () {
@@ -152,18 +191,21 @@ $(document).ready(function() {
   $("#personnelBtn").click(function () {
     
     // Call function to refresh personnel table
+    //refreshPersonnelTable()
     
   });
   
   $("#departmentsBtn").click(function () {
     
     // Call function to refresh department table
+    //refreshDepartmentTable()
     
   });
   
   $("#locationsBtn").click(function () {
     
     // Call function to refresh location table
+    //refreshLocationTable()
     
   });
   
