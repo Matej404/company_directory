@@ -1,18 +1,63 @@
+//let dataFound = [];
+
 $(document).ready(function() {
-    console.log("jQuery is working!");
-    // You can add more code here to test jQuery functionality
+    //console.log("jQuery is working!");
+    
     $("#searchInp").on("keyup", function () {
+      console.log('Search input keyup event triggered.');
   
-    // your code
+    let searchText = $(this).val().trim();
+    console.log('Search text:', searchText);
+
+    if(searchText !== "") {
+      console.log('Making AJAX request to search for:', searchText);
+
+      $.ajax({
+        url: "libs/php/SearchAll.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          txt: searchText
+        },
+        success: function(response) {
+          console.log("Full Response: ", response);
+          
+          if(response.status.code === "200") {
+
+            let dataFound = response.data.found;
+            console.log("Data Found: ", dataFound)
+            
+            refreshPersonnelTable(dataFound);
+          } else {
+
+            console.log("Error: ", response.status.success);
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX Error:", textStatus, errorThrown);
+        }
+      })
+    } else {
+      dataFound = [];
+      refreshPersonnelTable(dataFound);
+    }
     
   });
   
   $("#refreshBtn").click(function () {
     
     if ($("#personnelBtn").hasClass("active")) {
-      
       // Refresh personnel table
-      refreshPersonnelTable()
+      
+      if (dataFound.length > 0) {
+        let personId = dataFound[0].id;
+        
+        // Refresh personnel table with the person's ID
+        refreshPersonnelTable(dataFound);
+    }
+    
+    //refreshPersonnelTable(dataFound);
       
     } else {
       
@@ -32,13 +77,18 @@ $(document).ready(function() {
     
   });
 
-  function refreshPersonnelTable() {
-    $.ajax({
+  function refreshPersonnelTable(dataFound) {
+    console.log("DATA FOUND: ", dataFound)
+    if (dataFound.length > 0) {
+      let personId = dataFound[0].id;
+
+      $.ajax({
         url: "libs/php/getPersonnelByID.php", 
         type: "GET",
         dataType: "json",
         data: {
-            id: 24 // Example ID, you should dynamically pass the ID based on your scenario
+          id: personId, 
+          //id: 1
         },
         success: function (result) {
             console.log("Success! Result:", result); // Log the fetched result
@@ -46,9 +96,6 @@ $(document).ready(function() {
             if (result.status.code === "200") {
                 let personnelData = result.data.personnel;
                 console.log(personnelData)
-
-                //let departmentData = result.data.department;
-                //console.log(departmentData);
 
                 $('#personnel-tab-pane table tbody').html(''); // Clear the table body
 
@@ -77,9 +124,11 @@ $(document).ready(function() {
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Error fetching personnel data: " + errorThrown);
+            console.log(jqXHR.responseText);
+            console.error("AJAX Error:", textStatus, errorThrown);
         }
     });
+  }
 }
 
 
@@ -128,7 +177,8 @@ $(document).ready(function() {
           
       },
       error: function (jqXHR, textStatus, errorThrown) {
-          console.error("Error fetching personnel data: " + errorThrown);
+        console.log(jqXHR.responseText);
+        console.error("AJAX Error:", textStatus, errorThrown);
       }
   });
   }
@@ -171,7 +221,8 @@ $(document).ready(function() {
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log(" Error fetching location data: ", errorThrown);
+          console.log(jqXHR.responseText);
+          console.error("AJAX Error:", textStatus, errorThrown);
         }
       })
   }
