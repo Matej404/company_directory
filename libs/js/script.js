@@ -229,12 +229,17 @@ $(document).ready(function() {
   });
   
   $("#personnelBtn").click(function () {
+    // Activate the Personnel tab
+    $('#myTab a[href="#personnel-tab-pane"]').tab('show');
+
     // Call function to refresh personnel table
     refreshPersonnelTable(dataFound);
     
   });
   
   $("#departmentsBtn").click(function () {
+    // Activate the Departments tab
+    $('#myTab a[href="#departments-tab-pane"]').tab('show');
     
     // Call function to refresh department table
     refreshDepartmentTable(dataFound);
@@ -242,6 +247,8 @@ $(document).ready(function() {
   });
   
   $("#locationsBtn").click(function () {
+    // Activate the Locations tab
+    $('#myTab a[href="#locations-tab-pane"]').tab('show');
     
     // Call function to refresh location table
     refreshLocationTable(dataFound);
