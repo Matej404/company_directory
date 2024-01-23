@@ -159,32 +159,32 @@
 
       <div class="modal-body">
           
-        <form id="editPersonnelForm">
+        <form id="editPersonnelForm" action="libs/php/editPersonnelForm.php" method="POST">
 
-          <input type="hidden" id="editPersonnelEmployeeID">
+          <input type="hidden" id="editPersonnelEmployeeID" name="editPersonnelEmployeeID">
 
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editPersonnelFirstName" placeholder="First name" required>
+            <input type="text" class="form-control" id="editPersonnelFirstName" name="editPersonnelFirstName" placeholder="First name" required>
             <label for="editPersonnelFirstName">First name</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editPersonnelLastName" placeholder="Last name" required>
+            <input type="text" class="form-control" id="editPersonnelLastName" name="editPersonnelLastName" placeholder="Last name" required>
             <label for="editPersonnelLastName">Last name</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="editPersonnelJobTitle" placeholder="Job title" required>
+            <input type="text" class="form-control" id="editPersonnelJobTitle" name="editPersonnelJobTitle" placeholder="Job title" required>
             <label for="editPersonnelJobTitle">Job Title</label>
           </div>          
 
           <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="editPersonnelEmailAddress" placeholder="Email address" required>
+            <input type="email" class="form-control" id="editPersonnelEmailAddress" id="editPersonnelEmailAddress" placeholder="Email address" required>
             <label for="editPersonnelEmailAddress">Email Address</label>
           </div>    
 
           <div class="form-floating">
-            <select class="form-select" id="editPersonnelDepartment" placeholder="Department">
+            <select class="form-select" id="editPersonnelDepartment" name="editPersonnelDepartment" placeholder="Department">
             </select>
             <label for="editPersonnelDepartment">Department</label>
           </div>  
@@ -194,7 +194,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="submit" form="editPersonnelForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+        <button type="submit" form="editPersonnelForm" class="btn btn-outline-primary btn-sm myBtn btn-save">SAVE</button>
         <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
       </div>
  

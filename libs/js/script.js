@@ -117,7 +117,6 @@ $(document).ready(function() {
 
 
   function refreshDepartmentTable(dataFound) {
-    //console.log("DATA FOUND DEPARTMENT: ", dataFound)
     if(dataFound.length > 0) {
       let departmentId = dataFound[0].departmentID;
 
@@ -216,7 +215,6 @@ $(document).ready(function() {
   }
   
   $("#filterBtn").click(function () {
-    console.log("trigger personnal table!!!!!")
     
     // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
     
@@ -272,11 +270,17 @@ $(document).ready(function() {
           // it can be referenced when the form is submitted
   
           $("#editPersonnelEmployeeID").val(result.data.personnel[0].id);
+          console.log("Employee ID:", $("#editPersonnelEmployeeID").val());
   
           $("#editPersonnelFirstName").val(result.data.personnel[0].firstName);
+          console.log("First Name:", $("#editPersonnelFirstName").val());
           $("#editPersonnelLastName").val(result.data.personnel[0].lastName);
+          console.log("Last Name:", $("#editPersonnelLastName").val());
           $("#editPersonnelJobTitle").val(result.data.personnel[0].jobTitle);
+          console.log("Job Title:", $("#editPersonnelJobTitle").val());
           $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
+          console.log("Email Address:", $("#editPersonnelEmailAddress").val());
+          
   
           $("#editPersonnelDepartment").html("");
   
@@ -290,6 +294,7 @@ $(document).ready(function() {
           });
   
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
+          console.log("Personnel Department:", $("#editPersonnelDepartment").val());
           
         } else {
           $("#editPersonnelModal .modal-title").replaceWith(
@@ -313,10 +318,36 @@ $(document).ready(function() {
     // stop the default browser behviour
   
     e.preventDefault();
-  
-    // AJAX call to save form data
+
+    // Serialize form data
+    let formData = $(this).serialize();
+    console.log("Form Data:", formData);
+
+ 
+    // Perform AJAX call to submit form data
+    $.ajax({
+       url: $(this).attr("action"),
+       type: $(this).attr("method"),
+       data: formData,
+       contentType: "application/json",
+       dataType: "json",
+       success: function (response) {
+          // Handle success response
+          console.log("Form submitted successfully:", response);
+ 
+          // Close the modal or perform any other actions as needed
+          $("#editPersonnelModal").modal("hide");
+       },
+       error: function (jqXHR, textStatus, errorThrown) {
+          // Handle error response
+          console.error("Form submission error:", textStatus, errorThrown);
+          // Display an error message or take appropriate action
+       }
+    });
     
   });
+
+
 });
 
 
