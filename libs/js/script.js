@@ -55,7 +55,7 @@ $(document).ready(function() {
       } else {
         
         // Refresh location table
-        refreshLocationTable();
+        refreshLocationTable(dataFound);
         
       }
       
@@ -223,9 +223,123 @@ $(document).ready(function() {
   $("#addBtn").click(function () {
     
     // Replicate the logic of the refresh button click to open the add modal for the table that is currently on display
-    
+
+    if ($("#personnelBtn").hasClass("active")) {
+      // Open the add modal for personnel
+      openAddPersonnelModal();
+
+    } else {
+      
+      if ($("#departmentsBtn").hasClass("active")) {
+        
+        // Open the add modal for departments
+        openAddDepartmentModal();
+        
+      } else {
+        
+        // Open the add modal for locations
+        openAddLocationModal();
+        
+      }
+      
+    }
   });
+
+  function openAddPersonnelModal() {
+    // Clear any existing values in the add personnel modal inputs
+    $("#addPersonnelFirstName").val("");
+    $("#addPersonnelLastName").val("");
+    $("#addPersonnelJobTitle").val("");
+    $("#addPersonnelEmailAddress").val("");
+    $("#addPersonnelDepartment").empty(); // Clear existing dropdown options
+
+    // Fetch the list of departments from the server
+    $.ajax({
+        url: "libs/php/getAllDepartments.php", // Replace with the actual URL to fetch departments
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            if (response.status.code === "200") {
+                let departments = response.data;
+
+                // Populate the department dropdown with fetched data
+                departments.forEach(function (department) {
+                    $("#addPersonnelDepartment").append(
+                        $("<option>", {
+                            value: department.id,
+                            text: department.name
+                        })
+                    );
+                });
+
+                // Open the add personnel modal
+                $("#addPersonnelModal").modal("show");
+            } else {
+                console.error("Error fetching departments:", response.status.description);
+                // Display an error message or take appropriate action
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseText);
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
+
+
+// Execute when the form button with type="submit" is clicked in the add personnel modal
+$("#addPersonnelForm").on("submit", function (e) {
+  // Prevent the default form submission behavior
+  e.preventDefault();
+
+  // Serialize form data
+  let formData = $(this).serialize();
+  console.log("Add Personnel Form Data:", formData);
+
+  // Perform AJAX call to submit form data
+  $.ajax({
+      url: $(this).attr("action"),
+      type: $(this).attr("method"),
+      data: formData,
+      contentType: "application/json",
+      dataType: "json",
+      success: function (response) {
+          // Handle success response
+          if (response.status.code === "200") {
+              console.log("Personnel added successfully:", response);
+
+              // Close the add personnel modal
+              $("#addPersonnelModal").modal("hide");
+
+              // You might want to refresh the personnel table after adding a new entry
+              refreshPersonnelTable(dataFound);
+          } else {
+              console.error("Personnel addition error:", response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX error:", textStatus, errorThrown);
+      }
+  });
+});
+
+
+
+
+function openAddDepartmentModal() {
+  console.log("Open the add modal for department")
+}
+
+function openAddLocationModal() {
+  console.log("Open the add modal for location")
+}
+
   
+
+
+
   $("#personnelBtn").click(function () {
     // Activate the Personnel tab
     $('#myTab a[href="#personnel-tab-pane"]').tab('show');
@@ -252,6 +366,7 @@ $(document).ready(function() {
     refreshLocationTable(dataFound);
     
   });
+  
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     
@@ -314,7 +429,6 @@ $(document).ready(function() {
   
   $("#editPersonnelForm").on("submit", function (e) {
     
-    // Executes when the form button with type="submit" is clicked
     // stop the default browser behviour
   
     e.preventDefault();
@@ -334,9 +448,22 @@ $(document).ready(function() {
        success: function (response) {
           // Handle success response
           console.log("Form submitted successfully:", response);
- 
+
           // Close the modal or perform any other actions as needed
-          $("#editPersonnelModal").modal("hide");
+          //$("#editPersonnelModal").modal("hide");
+                      // Check if the status code is 200 for a successful response
+                      if (response.status.code === "200") {
+                        // Handle success response
+                        console.log("Form submitted successfully:", response);
+
+        
+                        // Close the modal or perform any other actions as needed
+                        $("#editPersonnelModal").modal("hide");
+                    } else {
+                        // Handle the case where the server returns an error
+                        console.error("Form submission error:", response.status.description);
+                        // Display an error message or take appropriate action
+                    }
        },
        error: function (jqXHR, textStatus, errorThrown) {
           // Handle error response

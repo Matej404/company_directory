@@ -80,7 +80,7 @@
             <!-- tacem@vinaora.com -->
           </td>
           <td class="text-end text-nowrap">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="23">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="10">
               <i class="fa-solid fa-pencil fa-fw"></i>
             </button>
             <button type="button" class="btn btn-primary btn-sm deletePersonnelBtn" data-id="23">
@@ -203,6 +203,70 @@
   </div>
   
 </div>
+
+
+<div id="addPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+  <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+  <!--   that the header and footer are always on display by making the body scroll -->
+  
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+       
+    <div class="modal-content shadow"> 
+      
+      <div class="modal-header bg-primary bg-gradient text-white">
+        <h5 class="modal-title">Add employee</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+          
+        <form id="addPersonnelForm" action="libs/php/insertPersonnel.php" method="POST">
+
+          <!-- No need for employee ID in the add modal -->
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addPersonnelFirstName" name="addPersonnelFirstName" placeholder="First name" required>
+            <label for="addPersonnelFirstName">First name</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addPersonnelLastName" name="addPersonnelLastName" placeholder="Last name" required>
+            <label for="addPersonnelLastName">Last name</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addPersonnelJobTitle" name="addPersonnelJobTitle" placeholder="Job title" required>
+            <label for="addPersonnelJobTitle">Job Title</label>
+          </div>          
+
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="addPersonnelEmailAddress" name="addPersonnelEmailAddress" placeholder="Email address" required>
+            <label for="addPersonnelEmailAddress">Email Address</label>
+          </div>    
+
+          <div class="form-floating">
+            <select class="form-select" id="addPersonnelDepartment" name="addPersonnelDepartment" placeholder="Department">
+              <!-- You might populate this dropdown dynamically if needed -->
+            </select>
+            <label for="addPersonnelDepartment">Department</label>
+          </div>  
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" form="addPersonnelForm" class="btn btn-outline-primary btn-sm myBtn btn-save" id="addForm">SAVE</button>
+        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+      </div>
+ 
+    </div>
+    
+  </div>
+  
+</div>
+
     
     <script type="application/javascript" src="libs/js/jquery-2.2.3.min.js"></script>
     <script type="application/javascript" src="libs/js/script.js"></script>    
