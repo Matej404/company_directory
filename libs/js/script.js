@@ -27,7 +27,7 @@ $(document).ready(function() {
             refreshLocationTable(dataFound);
           } else {
 
-            console.log("Error: ", response.status.success);
+            console.log("Error: ", response.status.description);
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -75,9 +75,11 @@ $(document).ready(function() {
           id: personId, 
         },
         success: function (result) {
+          //console.log("Get person by ID: ", result);
 
             if (result.status.code === "200") {
                 let personnelData = result.data.personnel;
+                //console.log("Personnel Data: ", personnelData)
 
                 $('#personnel-tab-pane table tbody').html(''); // Clear the table body
 
@@ -217,8 +219,75 @@ $(document).ready(function() {
   $("#filterBtn").click(function () {
     
     // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
-    
+    openFilterModal();
   });
+
+      // Add event listener for when the user applies the filter
+      $("#applyFilterBtn").click(function () {
+        // Get selected filter criteria
+        let selectedDepartments = getSelectedDepartments();
+        let selectedLocations = getSelectedLocations();
+
+        // Perform the filter operation based on selected criteria
+        filterTable(selectedDepartments, selectedLocations);
+
+        // Close the filter modal
+        $("#filterModal").modal("hide");
+    });
+
+  function openFilterModal() {
+
+    $("#filterModal").modal("show");
+
+
+}
+
+function getSelectedDepartments() {
+
+    return $(".departmentCheckbox:checked").map(function () {
+        return $(this).val();
+    }).get();
+}
+
+function getSelectedLocations() {
+
+    return $(".locationCheckbox:checked").map(function () {
+        return $(this).val();
+    }).get();
+}
+
+function filterTable(selectedDepartments, selectedLocations) {
+  console.log("Filtering with departments:", selectedDepartments);
+  console.log("Filtering with locations:", selectedLocations);
+
+    $.ajax({
+        url: "libs/php/filterPersonnel.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+            departments: selectedDepartments,
+            locations: selectedLocations
+        },
+        success: function (response) {
+          console.log("AJAX response:", response);
+
+            if (response.status.code === "200") {
+                let filteredData = response.data;
+                console.log("Filter data found: ", filteredData)
+                refreshPersonnelTable(filteredData);
+                refreshDepartmentTable(filteredData);
+                refreshLocationTable(filteredData);
+            } else {
+                console.error("Error filtering data:", response.status.description);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
+
   
   $("#addBtn").click(function () {
     
@@ -337,7 +406,7 @@ function openAddLocationModal() {
 }
 
   
-
+/*
 
 
   $("#personnelBtn").click(function () {
@@ -366,7 +435,7 @@ function openAddLocationModal() {
     refreshLocationTable(dataFound);
     
   });
-  
+  */
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     
@@ -447,7 +516,7 @@ function openAddLocationModal() {
        dataType: "json",
        success: function (response) {
           // Handle success response
-          console.log("Form submitted successfully:", response);
+          //console.log("Form submitted successfully:", response);
 
           // Close the modal or perform any other actions as needed
           //$("#editPersonnelModal").modal("hide");
@@ -473,8 +542,6 @@ function openAddLocationModal() {
     });
     
   });
-
-
 });
 
 

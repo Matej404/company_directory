@@ -267,6 +267,133 @@
   
 </div>
 
+<!-- Filter modal -->
+  <div class="modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary bg-gradient text-white">
+                <h5 class="modal-title" id="filterModalLabel">Filter Personnel</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="modal-body">
+                <h6>Select Departments:</h6>
+                <div class="form-check">
+                    <input class="form-check-input departmentCheckbox" type="checkbox" value="1" id="departmentCheckbox1">
+                    <label class="form-check-label" for="departmentCheckbox1">
+                      Human Resources
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input departmentCheckbox" type="checkbox" value="2" id="departmentCheckbox2">
+                    <label class="form-check-label" for="departmentCheckbox2">
+                      Sales
+                    </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input departmentCheckbox" type="checkbox" value="3" id="departmentCheckbox3">
+                  <label class="form-check-label" for="departmentCheckbox3">
+                    Marketing
+                  </label>
+                </div>
+              <div class="form-check">
+                <input class="form-check-input departmentCheckbox" type="checkbox" value="4" id="departmentCheckbox4">
+                <label class="form-check-label" for="departmentCheckbox4">
+                  Legal
+                </label>
+              </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="5" id="departmentCheckbox5">
+              <label class="form-check-label" for="departmentCheckbox5">
+                Services
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="6" id="departmentCheckbox6">
+              <label class="form-check-label" for="departmentCheckbox6">
+                Research and Development
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="7" id="departmentCheckbox7">
+              <label class="form-check-label" for="departmentCheckbox7">
+                Product Management
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="8" id="departmentCheckbox8">
+              <label class="form-check-label" for="departmentCheckbox8">
+                Training
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="9" id="departmentCheckbox9">
+              <label class="form-check-label" for="departmentCheckbox9">
+                Support
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="10" id="departmentCheckbox10">
+              <label class="form-check-label" for="departmentCheckbox10">
+                Engineering
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="11" id="departmentCheckbox11">
+              <label class="form-check-label" for="departmentCheckbox11">
+                Accounting
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input departmentCheckbox" type="checkbox" value="12" id="departmentCheckbox12">
+              <label class="form-check-label" for="departmentCheckbox12">
+                Business Development
+              </label>
+            </div>
+                <!-- Add more department checkboxes as needed -->
+
+                <h6 class="mt-3">Select Locations:</h6>
+                <div class="form-check">
+                    <input class="form-check-input locationCheckbox" type="checkbox" value="1" id="locationCheckbox1">
+                    <label class="form-check-label" for="locationCheckbox1">
+                      London
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input locationCheckbox" type="checkbox" value="2" id="locationCheckbox2">
+                    <label class="form-check-label" for="locationCheckbox2">
+                      New York
+                    </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input locationCheckbox" type="checkbox" value="3" id="locationCheckbox3">
+                  <label class="form-check-label" for="locationCheckbox3">
+                    Paris
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input locationCheckbox" type="checkbox" value="4" id="locationCheckbox4">
+                  <label class="form-check-label" for="locationCheckbox4">
+                    Munich
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input locationCheckbox" type="checkbox" value="5" id="locationCheckbox5">
+                  <label class="form-check-label" for="locationCheckbox5">
+                    Rome
+                  </label>
+                </div>
+                <!-- Add more location checkboxes as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" id="applyFilterBtn">Apply Filter</button>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     
     <script type="application/javascript" src="libs/js/jquery-2.2.3.min.js"></script>
     <script type="application/javascript" src="libs/js/script.js"></script>    
