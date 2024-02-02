@@ -16,15 +16,19 @@ $(document).ready(function() {
           txt: searchText
         },
         success: function(response) {
-          console.log("Full Response: ", response);
+          //console.log("Full Response: ", response);
           
           if(response.status.code === "200") {
 
             let dataFound = response.data.found;
-            
-            refreshPersonnelTable(dataFound);
-            refreshDepartmentTable(dataFound);
-            refreshLocationTable(dataFound);
+            console.log("Data Found", dataFound);
+
+            renderPersonnelTable(dataFound);
+            renderDepartmentTable(dataFound);
+            renderLocationTable(dataFound);
+            //refreshPersonnelTable(dataFound);
+            //refreshDepartmentTable(dataFound);
+            //refreshLocationTable(dataFound);
           } else {
 
             console.log("Error: ", response.status.description);
@@ -35,11 +39,12 @@ $(document).ready(function() {
           console.error("AJAX Error:", textStatus, errorThrown);
         }
       })
-    } 
-    
+    }  
   });
   
+  
   $("#refreshBtn").click(function () {
+    console.log("Refresh Button")
     
     if ($("#personnelBtn").hasClass("active")) {
       // Refresh personnel table
@@ -56,13 +61,101 @@ $(document).ready(function() {
         
         // Refresh location table
         refreshLocationTable(dataFound);
-        
       }
       
     }
     
   });
 
+
+  function renderPersonnelTable(dataFound) {
+    if (dataFound.length > 0) {
+        $('#personnel-tab-pane table tbody').html(''); // Clear the table body
+
+        dataFound.forEach(function (person) {
+            // Append rows to the table with fetched personnel data
+            $('#personnel-tab-pane table tbody').append(
+              '<tr>' +
+              '<td class="align-middle text-nowrap">' + person.firstName + ', ' + person.lastName + '</td>' +
+              '<td class="align-middle text-nowrap d-none d-md-table-cell">' + person.departmentName + '</td>' +
+              '<td class="align-middle text-nowrap d-none d-md-table-cell">' + person.locationName + '</td>' +
+              '<td class="align-middle text-nowrap d-none d-md-table-cell">' + person.email + '</td>' +
+              '<td class="text-end text-nowrap">' +
+              '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="' + person.id + '">' +
+              '<i class="fa-solid fa-pencil fa-fw"></i>' +
+              '</button>' +
+              '<button type="button" class="btn btn-primary btn-sm deletePersonnelBtn" data-id="' + person.id + '">' +
+              '<i class="fa-solid fa-trash fa-fw"></i>' +
+              '</button>' +
+              '</td>' +
+              '</tr>'
+            );
+        });
+        // Update any other UI elements or actions as required
+    } else {
+        // Handle the case when no data is found
+        console.log("No data found for personnel.");
+    }
+}
+
+
+function renderDepartmentTable(dataFound) {
+  if (dataFound.length > 0) {
+      $('#departments-tab-pane table tbody').html(''); // Clear the table body
+
+      dataFound.forEach(function (department) {
+          // Append rows to the table with fetched personnel data
+          $('#departments-tab-pane table tbody').append(
+            '<tr>' +
+            '<td class="align-middle text-nowrap">' + department.departmentName + '</td>' +
+            '<td class="align-middle text-nowrap d-none d-md-table-cell">' + department.locationName + '</td>' +
+            '<td class="align-middle text-end text-nowrap">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="' + department.id + '">' +
+            '<i class="fa-solid fa-pencil fa-fw"></i>' +
+            '</button>' +
+            '<button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id="' + department.id + '">' +
+            '<i class="fa-solid fa-trash fa-fw"></i>' +
+            '</button>' +
+            '</td>' +
+            '</tr>'
+          );
+      });
+      // Update any other UI elements or actions as required
+  } else {
+      // Handle the case when no data is found
+      console.log("No data found for department.");
+  }
+}
+
+function renderLocationTable(dataFound) {
+  if (dataFound.length > 0) {
+      $('#locations-tab-pane table tbody').html(''); // Clear the table body
+
+      dataFound.forEach(function (location) {
+          // Append rows to the table with fetched personnel data
+          $("#locations-tab-pane table tbody").append(
+            '<tr>' +
+            '<td class="align-middle text-nowrap">' + location.locationName + '</td>' +
+            '<td class="align-middle text-end text-nowrap">' +
+            '<button type="button" class="btn btn-primary btn-sm">' +
+            '<i class="fa-solid fa-pencil fa-fw"></i>' +
+            '</button>' +
+            '<button type="button" class="btn btn-primary btn-sm">' +
+            '<i class="fa-solid fa-trash fa-fw"></i>' +
+            '</button>' +
+            '</td>' +
+            '</tr>'
+          )
+      });
+      // Update any other UI elements or actions as required
+  } else {
+      // Handle the case when no data is found
+      console.log("No data found for department.");
+  }
+}
+
+
+//______________-
   function refreshPersonnelTable(dataFound) {
     if (dataFound.length > 0) {
       let personId = dataFound[0].id;
@@ -79,7 +172,7 @@ $(document).ready(function() {
 
             if (result.status.code === "200") {
                 let personnelData = result.data.personnel;
-                //console.log("Personnel Data: ", personnelData)
+                //console.log("Personnel Data: ", personnelData);
 
                 $('#personnel-tab-pane table tbody').html(''); // Clear the table body
 
@@ -269,14 +362,14 @@ function filterTable(selectedDepartments, selectedLocations) {
             locations: selectedLocations
         },
         success: function (response) {
-          console.log("AJAX response:", response);
+          console.log("FILTER AJAX response:", response);
 
             if (response.status.code === "200") {
                 let filteredData = response.data;
-                console.log("Filter data found: ", filteredData)
-                refreshPersonnelTable(filteredData);
-                refreshDepartmentTable(filteredData);
-                refreshLocationTable(filteredData);
+                //console.log("Filter data found: ", filteredData)
+                renderPersonnelTable(filteredData);
+                renderDepartmentTable(filteredData);
+                renderLocationTable(filteredData);
             } else {
                 console.error("Error filtering data:", response.status.description);
             }
@@ -356,6 +449,8 @@ function filterTable(selectedDepartments, selectedLocations) {
 }
 
 
+
+
 // Execute when the form button with type="submit" is clicked in the add personnel modal
 $("#addPersonnelForm").on("submit", function (e) {
   // Prevent the default form submission behavior
@@ -406,36 +501,7 @@ function openAddLocationModal() {
 }
 
   
-/*
 
-
-  $("#personnelBtn").click(function () {
-    // Activate the Personnel tab
-    $('#myTab a[href="#personnel-tab-pane"]').tab('show');
-
-    // Call function to refresh personnel table
-    refreshPersonnelTable(dataFound);
-    
-  });
-  
-  $("#departmentsBtn").click(function () {
-    // Activate the Departments tab
-    $('#myTab a[href="#departments-tab-pane"]').tab('show');
-    
-    // Call function to refresh department table
-    refreshDepartmentTable(dataFound);
-    
-  });
-  
-  $("#locationsBtn").click(function () {
-    // Activate the Locations tab
-    $('#myTab a[href="#locations-tab-pane"]').tab('show');
-    
-    // Call function to refresh location table
-    refreshLocationTable(dataFound);
-    
-  });
-  */
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     
@@ -444,7 +510,7 @@ function openAddLocationModal() {
       type: "POST",
       dataType: "json",
       data: {
-        id: $(e.relatedTarget).attr("data-id") // Retrieves the data-id attribute from the calling button
+        id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
         var resultCode = result.status.code;

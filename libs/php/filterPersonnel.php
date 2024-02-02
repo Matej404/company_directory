@@ -34,13 +34,11 @@ $locationIDs = isset($_GET['locations']) ? $_GET['locations'] : [];
 $departmentCondition = $departmentIDs ? ' AND p.departmentID IN (' . implode(',', $departmentIDs) . ')' : '';
 $locationCondition = $locationIDs ? ' AND d.locationID IN (' . implode(',', $locationIDs) . ')' : '';
 
-$query = 'SELECT p.id, p.firstName, p.lastName, p.email, p.departmentID, d.name AS departmentName, l.id AS locationID
+$query = 'SELECT p.id, p.firstName, p.lastName, p.email, p.departmentID, d.name AS departmentName, l.id AS locationID, l.name AS locationName
     FROM personnel p
     LEFT JOIN department d ON p.departmentID = d.id
     LEFT JOIN location l ON d.locationID = l.id
     WHERE 1' . $departmentCondition . $locationCondition;
-
-
 
 $result = $conn->query($query);
 
