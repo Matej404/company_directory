@@ -21,7 +21,7 @@ $(document).ready(function() {
           if(response.status.code === "200") {
 
             let dataFound = response.data.found;
-            console.log("Data Found", dataFound);
+            //console.log("Data Found", dataFound);
 
             listPersonnelTable(dataFound);
             listDepartmentTable(dataFound);
@@ -131,6 +131,7 @@ function listLocationTable(dataFound) {
     if ($("#personnelBtn").hasClass("active")) {
       
       // Refresh personnel table
+      refreshPersonnelTable();
       
     } else {
       
@@ -149,7 +150,30 @@ function listLocationTable(dataFound) {
   });
 
 
-//________get-personnel_department_location_by_id_functions_____________________________________//
+//________refresh-personnel_department_location_functions_____________________________________//
+function refreshPersonnelTable() {
+  $.ajax({
+    url: "libs/php/refreshPersonnel.php",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+        if (response.status.code === "200") {
+            let refreshedData = response.data; 
+            console.log("Refreshed personnel data: ", refreshedData);
+            listPersonnelTable(refreshedData);
+        } else {
+            console.error("Error refreshing personnel data:", response.status.description);
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.error("AJAX Error: ", textStatus, errorThrown);
+    }
+  });
+}
+
+
+//_____________________________________________________________________________________________//
 
 
 //________get-personnel_department_location_by_id_functions_____________________________________//
@@ -165,10 +189,10 @@ function getPersonneById(dataFound) {
         id: personId
       },
       success: function(response) {
-        console.log("Get person by ID: ", response);
+        //console.log("Get person by ID: ", response);
         if(response.status.code === "200") {
           let personnelData = response.data.personnel;
-          console.log("Get Person", personnelData)
+          //console.log("Get Person", personnelData)
 
           $('#personnel-tab-pane table tbody').html("");
 
@@ -453,7 +477,7 @@ $("#addPersonnelForm").on("submit", function (e) {
 
   // Serialize form data
   let formData = $(this).serialize();
-  console.log("Add Personnel Form Data:", formData);
+  //console.log("Add Personnel Form Data:", formData);
 
   // Perform AJAX call to submit form data
   $.ajax({
@@ -465,13 +489,13 @@ $("#addPersonnelForm").on("submit", function (e) {
       success: function (response) {
           // Handle success response
           if (response.status.code === "200") {
-              console.log("Personnel added successfully:", response);
+              //console.log("Personnel added successfully:", response);
 
               // Close the add personnel modal
               $("#addPersonnelModal").modal("hide");
 
               // You might want to refresh the personnel table after adding a new entry
-              refreshPersonnelTable(dataFound);
+              //refreshPersonnelTable(dataFound);
           } else {
               console.error("Personnel addition error:", response.status.description);
               // Display an error message or take appropriate action
@@ -495,7 +519,25 @@ function openAddLocationModal() {
   console.log("Open the add modal for location")
 }
 
+
+$("#personnelBtn").click(function () {
+    
+  // Call function to refresh personnel table
+  refreshPersonnelTable();
   
+});
+
+$("#departmentsBtn").click(function () {
+  
+  // Call function to refresh department table
+  
+});
+
+$("#locationsBtn").click(function () {
+  
+  // Call function to refresh location table
+  
+});
 
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
