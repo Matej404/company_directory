@@ -28,8 +28,7 @@ if (mysqli_connect_errno()) {
 }
 
 // SQL statement to retrieve personnel data
-$query = 'SELECT p.id, p.firstName, p.lastName, p.email, p.jobTitle, p.departmentID, d.name AS departmentName, l.id AS locationID, l.name AS locationName FROM personnel p
-LEFT JOIN department d ON p.departmentID = d.id
+$query = 'SELECT d.id, d.name, d.locationID, l.name AS locationName FROM department d
 LEFT JOIN location l ON d.locationID = l.id';
 
 $result = $conn->query($query);
@@ -48,17 +47,17 @@ if (!$result) {
     exit;
 }
 
-$personnel = [];
+$department = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
-    array_push($personnel, $row);
+    array_push($department, $row);
 }
 
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-$output['data']['personnel'] = $personnel;
+$output['data']['department'] = $department;
 
 mysqli_close($conn);
 

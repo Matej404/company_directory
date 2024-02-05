@@ -138,6 +138,7 @@ function listLocationTable(dataFound) {
       if ($("#departmentsBtn").hasClass("active")) {        
 
         // Refresh department table
+        refreshDepartmentsTable();
         
       } else {
         
@@ -158,11 +159,11 @@ function refreshPersonnelTable() {
     dataType: "json",
     success: function(response) {
         if (response.status.code === "200") {
-            let refreshedData = response.data; 
+            let refreshedData = response.data.personnel; 
             console.log("Refreshed personnel data: ", refreshedData);
             listPersonnelTable(refreshedData);
         } else {
-            console.error("Error refreshing personnel data:", response.status.description);
+            console.log("Error refreshing personnel data:", response.status.description);
         }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -170,6 +171,27 @@ function refreshPersonnelTable() {
       console.error("AJAX Error: ", textStatus, errorThrown);
     }
   });
+}
+
+function refreshDepartmentsTable() {
+  $.ajax({
+    url: "libs/php/refreshDepartments.php",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+      if(response.status.code === "200") {
+        let refreshedData = response.data.department;
+        console.log("Refresh departments data: ", refreshedData);
+        listDepartmentTable(refreshedData);
+      } else {
+        console.log("Error refreshing personnel data: ", response.status.description)
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.log("AJAX Error: ", textStatus, errorThrown);
+    }
+  })
 }
 
 
@@ -530,6 +552,7 @@ $("#personnelBtn").click(function () {
 $("#departmentsBtn").click(function () {
   
   // Call function to refresh department table
+  refreshDepartmentsTable();
   
 });
 
