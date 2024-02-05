@@ -47,6 +47,7 @@ $(document).ready(function() {
         $('#personnel-tab-pane table tbody').html(''); 
 
         dataFound.forEach(function (person) {
+          console.log("Data Found: ", person);
             $('#personnel-tab-pane table tbody').append(
               '<tr>' +
               '<td class="align-middle text-nowrap">' + person.firstName + ', ' + person.lastName + '</td>' +
@@ -71,13 +72,16 @@ $(document).ready(function() {
 
 
 function listDepartmentTable(dataFound) {
+  //console.log("data: ", dataFound)
   if (dataFound.length > 0) {
       $('#departments-tab-pane table tbody').html(''); 
 
       dataFound.forEach(function (department) {
+        let departmentName = department.name || department.departmentName;
+
           $('#departments-tab-pane table tbody').append(
             '<tr>' +
-            '<td class="align-middle text-nowrap">' + department.departmentName + '</td>' +
+            '<td class="align-middle text-nowrap">' + departmentName + '</td>' +
             '<td class="align-middle text-nowrap d-none d-md-table-cell">' + department.locationName + '</td>' +
             '<td class="align-middle text-end text-nowrap">' +
             '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="' + department.id + '">' +
@@ -102,9 +106,11 @@ function listLocationTable(dataFound) {
       $('#locations-tab-pane table tbody').html(''); 
 
       dataFound.forEach(function (location) {
+        const locationName = location.name || location.locationName;
+
           $("#locations-tab-pane table tbody").append(
             '<tr>' +
-            '<td class="align-middle text-nowrap">' + location.locationName + '</td>' +
+            '<td class="align-middle text-nowrap">' + locationName + '</td>' +
             '<td class="align-middle text-end text-nowrap">' +
             '<button type="button" class="btn btn-primary btn-sm">' +
             '<i class="fa-solid fa-pencil fa-fw"></i>' +
@@ -143,6 +149,7 @@ function listLocationTable(dataFound) {
       } else {
         
         // Refresh location table
+        refreshLocationsTable();
         
       }
       
@@ -184,7 +191,7 @@ function refreshDepartmentsTable() {
         console.log("Refresh departments data: ", refreshedData);
         listDepartmentTable(refreshedData);
       } else {
-        console.log("Error refreshing personnel data: ", response.status.description)
+        console.log("Error refreshing department data: ", response.status.description)
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -194,6 +201,26 @@ function refreshDepartmentsTable() {
   })
 }
 
+function refreshLocationsTable() {
+  $.ajax({
+    url: "libs/php/refreshLocations.php",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+      if(response.status.code === "200") {
+        let refreshedData = response.data.location;
+        console.log("Refresh locations data: ", refreshedData);
+        listLocationTable(refreshedData);
+      } else {
+        console.log("Error refreshing locations data: ", response.status.description)
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.log("AJAX Error: ", textStatus, errorThrown);
+    }
+  })
+}
 
 //_____________________________________________________________________________________________//
 
@@ -559,6 +586,7 @@ $("#departmentsBtn").click(function () {
 $("#locationsBtn").click(function () {
   
   // Call function to refresh location table
+  refreshLocationsTable();
   
 });
 
