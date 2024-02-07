@@ -16,12 +16,10 @@ $(document).ready(function() {
           txt: searchText
         },
         success: function(response) {
-          //console.log("Full Response: ", response);
           
           if(response.status.code === "200") {
 
             let dataFound = response.data.found;
-            //console.log("Data Found", dataFound);
 
             listPersonnelTable(dataFound);
             listDepartmentTable(dataFound);
@@ -47,7 +45,6 @@ $(document).ready(function() {
         $('#personnel-tab-pane table tbody').html(''); 
 
         dataFound.forEach(function (person) {
-          console.log("Data Found: ", person);
             $('#personnel-tab-pane table tbody').append(
               '<tr>' +
               '<td class="align-middle text-nowrap">' + person.firstName + ', ' + person.lastName + '</td>' +
@@ -72,7 +69,7 @@ $(document).ready(function() {
 
 
 function listDepartmentTable(dataFound) {
-  //console.log("data: ", dataFound)
+
   if (dataFound.length > 0) {
       $('#departments-tab-pane table tbody').html(''); 
 
@@ -132,7 +129,6 @@ function listLocationTable(dataFound) {
   
   
   $("#refreshBtn").click(function () {
-    //console.log("Refresh Button")
     
     if ($("#personnelBtn").hasClass("active")) {
       
@@ -167,8 +163,9 @@ function refreshPersonnelTable() {
     success: function(response) {
         if (response.status.code === "200") {
             let refreshedData = response.data.personnel; 
-            console.log("Refreshed personnel data: ", refreshedData);
+
             listPersonnelTable(refreshedData);
+
         } else {
             console.log("Error refreshing personnel data:", response.status.description);
         }
@@ -188,8 +185,9 @@ function refreshDepartmentsTable() {
     success: function(response) {
       if(response.status.code === "200") {
         let refreshedData = response.data.department;
-        console.log("Refresh departments data: ", refreshedData);
+
         listDepartmentTable(refreshedData);
+
       } else {
         console.log("Error refreshing department data: ", response.status.description)
       }
@@ -209,8 +207,9 @@ function refreshLocationsTable() {
     success: function(response) {
       if(response.status.code === "200") {
         let refreshedData = response.data.location;
-        console.log("Refresh locations data: ", refreshedData);
+  
         listLocationTable(refreshedData);
+
       } else {
         console.log("Error refreshing locations data: ", response.status.description)
       }
@@ -238,10 +237,9 @@ function getPersonneById(dataFound) {
         id: personId
       },
       success: function(response) {
-        //console.log("Get person by ID: ", response);
+  
         if(response.status.code === "200") {
           let personnelData = response.data.personnel;
-          //console.log("Get Person", personnelData)
 
           $('#personnel-tab-pane table tbody').html("");
 
@@ -417,8 +415,6 @@ function getSelectedLocations() {
 }
 
 function filterTable(selectedDepartments, selectedLocations) {
-  console.log("Filtering with departments:", selectedDepartments);
-  console.log("Filtering with locations:", selectedLocations);
 
     $.ajax({
         url: "libs/php/filterPersonnel.php",
@@ -429,11 +425,9 @@ function filterTable(selectedDepartments, selectedLocations) {
             locations: selectedLocations
         },
         success: function (response) {
-          console.log("FILTER AJAX response:", response);
 
             if (response.status.code === "200") {
                 let filteredData = response.data;
-                //console.log("Filter data found: ", filteredData)
 
                 listPersonnelTable(filteredData);
                 listDepartmentTable(filteredData);
@@ -481,11 +475,11 @@ function filterTable(selectedDepartments, selectedLocations) {
     $("#addPersonnelLastName").val("");
     $("#addPersonnelJobTitle").val("");
     $("#addPersonnelEmailAddress").val("");
-    $("#addPersonnelDepartment").empty(); // Clear existing dropdown options
+    $("#addPersonnelDepartment").empty(); 
 
     // Fetch the list of departments from the server
     $.ajax({
-        url: "libs/php/getAllDepartments.php", // Replace with the actual URL to fetch departments
+        url: "libs/php/getAllDepartments.php", 
         type: "GET",
         dataType: "json",
         success: function (response) {
@@ -519,16 +513,13 @@ function filterTable(selectedDepartments, selectedLocations) {
 
 
 
-// Execute when the form button with type="submit" is clicked in the add personnel modal
 $("#addPersonnelForm").on("submit", function (e) {
-  // Prevent the default form submission behavior
+
   e.preventDefault();
 
-  // Serialize form data
   let formData = $(this).serialize();
-  //console.log("Add Personnel Form Data:", formData);
+ 
 
-  // Perform AJAX call to submit form data
   $.ajax({
       url: $(this).attr("action"),
       type: $(this).attr("method"),
@@ -601,23 +592,16 @@ $("#locationsBtn").click(function () {
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
-        var resultCode = result.status.code;
+        let resultCode = result.status.code;
   
         if (resultCode == 200) {
-          // Update the hidden input with the employee id so that
-          // it can be referenced when the form is submitted
   
           $("#editPersonnelEmployeeID").val(result.data.personnel[0].id);
-          console.log("Employee ID:", $("#editPersonnelEmployeeID").val());
   
           $("#editPersonnelFirstName").val(result.data.personnel[0].firstName);
-          console.log("First Name:", $("#editPersonnelFirstName").val());
           $("#editPersonnelLastName").val(result.data.personnel[0].lastName);
-          console.log("Last Name:", $("#editPersonnelLastName").val());
           $("#editPersonnelJobTitle").val(result.data.personnel[0].jobTitle);
-          console.log("Job Title:", $("#editPersonnelJobTitle").val());
           $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
-          console.log("Email Address:", $("#editPersonnelEmailAddress").val());
           
   
           $("#editPersonnelDepartment").html("");
@@ -632,7 +616,6 @@ $("#locationsBtn").click(function () {
           });
   
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
-          console.log("Personnel Department:", $("#editPersonnelDepartment").val());
           
         } else {
           $("#editPersonnelModal .modal-title").replaceWith(
@@ -648,36 +631,31 @@ $("#locationsBtn").click(function () {
     });
   });
   
-  // Executes when the form button with type="submit" is clicked
   
   $("#editPersonnelForm").on("submit", function (e) {
-    
-    // stop the default browser behviour
   
     e.preventDefault();
 
-    // Serialize form data
     let formData = $(this).serialize();
     console.log("Form Data:", formData);
 
  
-    // Perform AJAX call to submit form data
     $.ajax({
        url: $(this).attr("action"),
        type: $(this).attr("method"),
        data: formData,
-       contentType: "application/json",
        dataType: "json",
        success: function (response) {
           // Handle success response
-          //console.log("Form submitted successfully:", response);
+          console.log("Form submitted successfully:", response);
 
           // Close the modal or perform any other actions as needed
           //$("#editPersonnelModal").modal("hide");
                       // Check if the status code is 200 for a successful response
                       if (response.status.code === "200") {
-                        // Handle success response
+        
                         console.log("Form submitted successfully:", response);
+                        //getPersonneById(dataFound)
 
         
                         // Close the modal or perform any other actions as needed
@@ -689,9 +667,8 @@ $("#locationsBtn").click(function () {
                     }
        },
        error: function (jqXHR, textStatus, errorThrown) {
-          // Handle error response
-          console.error("Form submission error:", textStatus, errorThrown);
-          // Display an error message or take appropriate action
+        console.log(jqXHR.responseText);
+        console.error("AJAX error:", textStatus, errorThrown);
        }
     });
     
