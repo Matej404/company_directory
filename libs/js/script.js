@@ -81,7 +81,7 @@ function listDepartmentTable(dataFound) {
             '<td class="align-middle text-nowrap">' + departmentName + '</td>' +
             '<td class="align-middle text-nowrap d-none d-md-table-cell">' + department.locationName + '</td>' +
             '<td class="align-middle text-end text-nowrap">' +
-            '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="' + department.id + '">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="' + department.id + '">' +
             '<i class="fa-solid fa-pencil fa-fw"></i>' +
             '</button>' +
             '<button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id="' + department.id + '">' +
@@ -109,7 +109,7 @@ function listLocationTable(dataFound) {
             '<tr>' +
             '<td class="align-middle text-nowrap">' + locationName + '</td>' +
             '<td class="align-middle text-end text-nowrap">' +
-            '<button type="button" class="btn btn-primary btn-sm">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="' + location.id + '">' +
             '<i class="fa-solid fa-pencil fa-fw"></i>' +
             '</button>' +
             '<button type="button" class="btn btn-primary btn-sm">' +
@@ -126,7 +126,8 @@ function listLocationTable(dataFound) {
   }
 }
 //______________________________________________________________________________________________//
-  
+
+
   
   $("#refreshBtn").click(function () {
     
@@ -146,6 +147,7 @@ function listLocationTable(dataFound) {
         
         // Refresh location table
         refreshLocationsTable();
+ 
         
       }
       
@@ -514,22 +516,23 @@ function filterTable(selectedDepartments, selectedLocations) {
 
 
 $("#addPersonnelForm").on("submit", function (e) {
+  console.log("Form submitted!");
 
   e.preventDefault();
 
   let formData = $(this).serialize();
+  console.log(formData);
  
 
   $.ajax({
       url: $(this).attr("action"),
       type: $(this).attr("method"),
       data: formData,
-      contentType: "application/json",
       dataType: "json",
       success: function (response) {
           // Handle success response
           if (response.status.code === "200") {
-              //console.log("Personnel added successfully:", response);
+              console.log("Personnel added successfully:", response);
 
               // Close the add personnel modal
               $("#addPersonnelModal").modal("hide");
@@ -581,6 +584,7 @@ $("#locationsBtn").click(function () {
   
 });
 
+//___________________________________________EDIT________________________________________________
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     
@@ -592,6 +596,7 @@ $("#locationsBtn").click(function () {
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
+        console.log("USPOREDITI: ", result.data.personnel[0])
         let resultCode = result.status.code;
   
         if (resultCode == 200) {
@@ -616,6 +621,7 @@ $("#locationsBtn").click(function () {
           });
   
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
+          console.log("DEPARTMENT IN PERSONNEL ", $("#editPersonnelDepartment").val())
           
         } else {
           $("#editPersonnelModal .modal-title").replaceWith(
@@ -633,7 +639,7 @@ $("#locationsBtn").click(function () {
   
   
   $("#editPersonnelForm").on("submit", function (e) {
-  
+
     e.preventDefault();
 
     let formData = $(this).serialize();
@@ -649,8 +655,7 @@ $("#locationsBtn").click(function () {
           // Handle success response
           console.log("Form submitted successfully:", response);
 
-          // Close the modal or perform any other actions as needed
-          //$("#editPersonnelModal").modal("hide");
+          
                       // Check if the status code is 200 for a successful response
                       if (response.status.code === "200") {
         
@@ -670,8 +675,149 @@ $("#locationsBtn").click(function () {
         console.log(jqXHR.responseText);
         console.error("AJAX error:", textStatus, errorThrown);
        }
+    });   
+  });
+
+  //_______________________________________LOCATION______________________________________________//
+
+  $("#editLocationModal").on("show.bs.modal", function (e) {
+    console.log("Location ID:", $(e.relatedTarget).attr("data-id"));
+
+    $.ajax({
+      url: "libs/php/getLocationByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $(e.relatedTarget).attr("data-id") 
+      },
+      success: function (result) {
+        console.log("Location data result:", result);
+        let resultCode = result.status.code;
+  
+        if (resultCode == 200) {
+          //console.log("Location data:", result);
+  
+          //$("#editLocationID").val(result.data.location[0].id);
+  
+          //$("#editLocationName").val(result.data.location[0].name);
+          
+          
+        } else {
+          $("#editLocationlModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+ 
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.responseText);
+        console.error("AJAX error:", textStatus, errorThrown);
+        $("#editLocationModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
     });
-    
+  });
+  
+  $("#editLocationForm").on("submit", function (e) {
+
+   
+  });
+
+  //______________________________________________________________________________________________//
+
+  //_______________________________________DEPARTMENT______________________________________________//
+
+
+  $("#editDepartmentModal").on("show.bs.modal", function (e) {
+    console.log("Modal show event triggeredFFFF");
+    $.ajax({
+      url: "libs/php/getDepartmentByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $(e.relatedTarget).attr("data-id") 
+      },
+      success: function (result) {
+        
+        let resultCode = result.status.code;
+  
+        if (resultCode == 200) {
+  
+          $("#editDepartmentID").val(result.data[0].id);
+  
+          
+          $("#editDepartment").html("");
+  
+          $.each(result.data.allDepartments, function () {
+            $("#editDepartment").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+          });
+  
+          $("#editDepartment").val(result.data[0].id);
+             
+
+          $("#editLocationName").val(result.data[0].locationName);
+
+          
+        } else {
+          $("#editDepartment .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#editDepartmentModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    });
+  });
+  
+  
+  $("#editDepartmentForm").on("submit", function (e) {
+  /*
+    e.preventDefault();
+
+    let formData = $(this).serialize();
+    console.log("Form Data:", formData);
+
+ 
+    $.ajax({
+       url: $(this).attr("action"),
+       type: $(this).attr("method"),
+       data: formData,
+       dataType: "json",
+       success: function (response) {
+          // Handle success response
+          console.log("Form submitted successfully:", response);
+
+          
+                      // Check if the status code is 200 for a successful response
+                      if (response.status.code === "200") {
+        
+                        console.log("Form submitted successfully:", response);
+                        //getPersonneById(dataFound)
+
+        
+                        // Close the modal or perform any other actions as needed
+                        $("#editDepartmentModal").modal("hide");
+                    } else {
+                        // Handle the case where the server returns an error
+                        console.error("Form submission error:", response.status.description);
+                        // Display an error message or take appropriate action
+                    }
+       },
+       error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.responseText);
+        console.error("AJAX error:", textStatus, errorThrown);
+       }
+    });
+    */
   });
 });
 

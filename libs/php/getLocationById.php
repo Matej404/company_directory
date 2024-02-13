@@ -25,7 +25,8 @@ if(mysqli_connect_errno()) {
     exit;
 }
 
-$query = $conn->prepare('SELECT name FROM location WHERE id = ?');
+//$query = $conn->prepare('SELECT id, name FROM location WHERE id = ?');
+$query = $conn->prepare('SELECT `id`, `name` FROM `location` WHERE `id` = ?');
 
 $query->bind_param("i", $_REQUEST['id']);
 
@@ -34,8 +35,8 @@ $query->execute();
 if(false === $query) {
 
     $output['status']['code'] = "400";
-    $output['status']['name'] = "exicute";
-    $output['status']['description'] = "query failed";
+    $output['status']['name'] = "execute";
+    $output['status']['description'] = "query failed " . $conn->error;
     $output['state'] = [];
 
     echo json_encode($output);
