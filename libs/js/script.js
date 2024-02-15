@@ -609,7 +609,9 @@ $("#locationsBtn").click(function () {
           $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
           
   
-          $("#editPersonnelDepartment").html("");
+          //$("#editPersonnelDepartment").html("");
+          $("#editPersonnelDepartment").empty();
+
   
           $.each(result.data.department, function () {
             $("#editPersonnelDepartment").append(
@@ -739,6 +741,7 @@ $("#locationsBtn").click(function () {
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
+        console.log("GET DEPARTMENT BY ID: ", result)
         
         let resultCode = result.status.code;
   
@@ -761,7 +764,7 @@ $("#locationsBtn").click(function () {
           $("#editDepartment").val(result.data[0].id);
              
 
-          $("#editLocationName").val(result.data[0].locationName);
+          $("#editDepartmentLocationName").val(result.data[0].locationName);
 
           
         } else {
@@ -778,9 +781,9 @@ $("#locationsBtn").click(function () {
     });
   });
   
-  
+
   $("#editDepartmentForm").on("submit", function (e) {
-  /*
+  
     e.preventDefault();
 
     let formData = $(this).serialize();
@@ -794,13 +797,13 @@ $("#locationsBtn").click(function () {
        dataType: "json",
        success: function (response) {
           // Handle success response
-          console.log("Form submitted successfully:", response);
+          console.log("Department Form response:", response);
 
           
                       // Check if the status code is 200 for a successful response
                       if (response.status.code === "200") {
         
-                        console.log("Form submitted successfully:", response);
+                        console.log("Department Form submitted successfully:", response);
                         //getPersonneById(dataFound)
 
         
@@ -817,8 +820,10 @@ $("#locationsBtn").click(function () {
         console.error("AJAX error:", textStatus, errorThrown);
        }
     });
-    */
+    
   });
+  
+
 });
 
 
