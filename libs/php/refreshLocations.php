@@ -28,7 +28,7 @@ if (mysqli_connect_errno()) {
 }
 
 // SQL statement to retrieve personnel data
-$query = 'SELECT name FROM location';
+$query = 'SELECT id, name FROM location';
 
 $result = $conn->query($query);
 

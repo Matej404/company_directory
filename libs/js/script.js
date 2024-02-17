@@ -20,6 +20,7 @@ $(document).ready(function() {
           if(response.status.code === "200") {
 
             let dataFound = response.data.found;
+            console.log("SEARCH DATA FOUND ", dataFound)
 
             listPersonnelTable(dataFound);
             listDepartmentTable(dataFound);
@@ -41,6 +42,8 @@ $(document).ready(function() {
   //_______listing_personnel_departments_personnel_functions_for_searchInp_event listener_____________//
 
   function listPersonnelTable(dataFound) {
+    console.log("LISTA PERSONNEL ", dataFound)
+
     if (dataFound.length > 0) {
         $('#personnel-tab-pane table tbody').html(''); 
 
@@ -69,6 +72,7 @@ $(document).ready(function() {
 
 
 function listDepartmentTable(dataFound) {
+  console.log("LISTA DEPARTMENT ", dataFound)
 
   if (dataFound.length > 0) {
       $('#departments-tab-pane table tbody').html(''); 
@@ -99,11 +103,13 @@ function listDepartmentTable(dataFound) {
 }
 
 function listLocationTable(dataFound) {
+  console.log("LISTA LOCATION ", dataFound)
   if (dataFound.length > 0) {
       $('#locations-tab-pane table tbody').html(''); 
 
       dataFound.forEach(function (location) {
         const locationName = location.name || location.locationName;
+        console.log("LISTA LOCATION 222", location)
 
           $("#locations-tab-pane table tbody").append(
             '<tr>' +
@@ -680,6 +686,103 @@ $("#locationsBtn").click(function () {
     });   
   });
 
+    //_______________________________________DEPARTMENT______________________________________________//
+
+
+    $("#editDepartmentModal").on("show.bs.modal", function (e) {
+      console.log("Modal show event triggeredFFFF");
+      console.log("Location ID:", $(e.relatedTarget).attr("data-id"));
+      $.ajax({
+        url: "libs/php/getDepartmentByID.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+          id: $(e.relatedTarget).attr("data-id") 
+        },
+        success: function (result) {
+          console.log("GET DEPARTMENT BY ID: ", result)
+          
+          let resultCode = result.status.code;
+    
+          if (resultCode == 200) {
+    
+            $("#editDepartmentID").val(result.data[0].id);
+    
+            
+            $("#editDepartment").html("");
+    
+            $.each(result.data.allDepartments, function () {
+              $("#editDepartment").append(
+                $("<option>", {
+                  value: this.id,
+                  text: this.name
+                })
+              );
+            });
+    
+            $("#editDepartment").val(result.data[0].id);
+               
+  
+            $("#editDepartmentLocationName").val(result.data[0].locationName);
+  
+            
+          } else {
+            $("#editDepartment .modal-title").replaceWith(
+              "Error retrieving data"
+            );
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          $("#editDepartmentModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+      });
+    });
+    
+  
+    $("#editDepartmentForm").on("submit", function (e) {
+    
+      e.preventDefault();
+  
+      let formData = $(this).serialize();
+      console.log("Form Data:", formData);
+  
+   
+      $.ajax({
+         url: $(this).attr("action"),
+         type: $(this).attr("method"),
+         data: formData,
+         dataType: "json",
+         success: function (response) {
+            // Handle success response
+            console.log("Department Form response:", response);
+  
+            
+                        // Check if the status code is 200 for a successful response
+                        if (response.status.code === "200") {
+          
+                          console.log("Department Form submitted successfully:", response);
+                          //getPersonneById(dataFound)
+  
+          
+                          // Close the modal or perform any other actions as needed
+                          $("#editDepartmentModal").modal("hide");
+                      } else {
+                          // Handle the case where the server returns an error
+                          console.error("Form submission error:", response.status.description);
+                          // Display an error message or take appropriate action
+                      }
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX error:", textStatus, errorThrown);
+         }
+      });
+      
+    });
+  //______________________________________________________________________________________________//  
+
   //_______________________________________LOCATION______________________________________________//
 
   $("#editLocationModal").on("show.bs.modal", function (e) {
@@ -699,9 +802,9 @@ $("#locationsBtn").click(function () {
         if (resultCode == 200) {
           //console.log("Location data:", result);
   
-          //$("#editLocationID").val(result.data.location[0].id);
+          $("#editLocationID").val(result.data.location[0].id);
   
-          //$("#editLocationName").val(result.data.location[0].name);
+          $("#editLocationName").val(result.data.location[0].name);
           
           
         } else {
@@ -721,69 +824,9 @@ $("#locationsBtn").click(function () {
     });
   });
   
+  
   $("#editLocationForm").on("submit", function (e) {
-
-   
-  });
-
-  //______________________________________________________________________________________________//
-
-  //_______________________________________DEPARTMENT______________________________________________//
-
-
-  $("#editDepartmentModal").on("show.bs.modal", function (e) {
-    console.log("Modal show event triggeredFFFF");
-    $.ajax({
-      url: "libs/php/getDepartmentByID.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        id: $(e.relatedTarget).attr("data-id") 
-      },
-      success: function (result) {
-        console.log("GET DEPARTMENT BY ID: ", result)
-        
-        let resultCode = result.status.code;
-  
-        if (resultCode == 200) {
-  
-          $("#editDepartmentID").val(result.data[0].id);
-  
-          
-          $("#editDepartment").html("");
-  
-          $.each(result.data.allDepartments, function () {
-            $("#editDepartment").append(
-              $("<option>", {
-                value: this.id,
-                text: this.name
-              })
-            );
-          });
-  
-          $("#editDepartment").val(result.data[0].id);
-             
-
-          $("#editDepartmentLocationName").val(result.data[0].locationName);
-
-          
-        } else {
-          $("#editDepartment .modal-title").replaceWith(
-            "Error retrieving data"
-          );
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        $("#editDepartmentModal .modal-title").replaceWith(
-          "Error retrieving data"
-        );
-      }
-    });
-  });
-  
-
-  $("#editDepartmentForm").on("submit", function (e) {
-  
+    
     e.preventDefault();
 
     let formData = $(this).serialize();
@@ -797,18 +840,18 @@ $("#locationsBtn").click(function () {
        dataType: "json",
        success: function (response) {
           // Handle success response
-          console.log("Department Form response:", response);
+          console.log("Location Form response:", response);
 
           
                       // Check if the status code is 200 for a successful response
                       if (response.status.code === "200") {
         
-                        console.log("Department Form submitted successfully:", response);
+                        console.log("Location Form submitted successfully:", response);
                         //getPersonneById(dataFound)
 
         
                         // Close the modal or perform any other actions as needed
-                        $("#editDepartmentModal").modal("hide");
+                        $("#editLocationModal").modal("hide");
                     } else {
                         // Handle the case where the server returns an error
                         console.error("Form submission error:", response.status.description);
@@ -822,7 +865,6 @@ $("#locationsBtn").click(function () {
     });
     
   });
-  
 
 });
 

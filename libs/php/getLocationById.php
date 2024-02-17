@@ -48,6 +48,8 @@ if(false === $query) {
 
 $result = $query->get_result();
 
+
+
 $location = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
