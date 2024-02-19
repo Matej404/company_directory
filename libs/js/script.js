@@ -451,6 +451,8 @@ function filterTable(selectedDepartments, selectedLocations) {
     });
 }
 
+//___________________________________________ADD________________________________________________
+
   
   $("#addBtn").click(function () {
     
@@ -478,17 +480,12 @@ function filterTable(selectedDepartments, selectedLocations) {
   });
 
   function openAddPersonnelModal() {
-    // Clear any existing values in the add personnel modal inputs
-    $("#addPersonnelFirstName").val("");
-    $("#addPersonnelLastName").val("");
-    $("#addPersonnelJobTitle").val("");
-    $("#addPersonnelEmailAddress").val("");
-    $("#addPersonnelDepartment").empty(); 
+
 
     // Fetch the list of departments from the server
     $.ajax({
         url: "libs/php/getAllDepartments.php", 
-        type: "GET",
+        type: "POST",
         dataType: "json",
         success: function (response) {
             if (response.status.code === "200") {
@@ -507,7 +504,7 @@ function filterTable(selectedDepartments, selectedLocations) {
                 // Open the add personnel modal
                 $("#addPersonnelModal").modal("show");
             } else {
-                console.error("Error fetching departments:", response.status.description);
+                console.error("Error fetching Personnel:", response.status.description);
                 // Display an error message or take appropriate action
             }
         },
@@ -517,8 +514,6 @@ function filterTable(selectedDepartments, selectedLocations) {
         }
     });
 }
-
-
 
 
 $("#addPersonnelForm").on("submit", function (e) {
@@ -544,7 +539,8 @@ $("#addPersonnelForm").on("submit", function (e) {
               $("#addPersonnelModal").modal("hide");
 
               // You might want to refresh the personnel table after adding a new entry
-              //refreshPersonnelTable(dataFound);
+              //listDepartmentTable(data);
+
           } else {
               console.error("Personnel addition error:", response.status.description);
               // Display an error message or take appropriate action
@@ -557,12 +553,80 @@ $("#addPersonnelForm").on("submit", function (e) {
   });
 });
 
-
-
-
+//_________________________________________addDepartment_____________________________________________
 function openAddDepartmentModal() {
-  console.log("Open the add modal for department")
+
+
+  // Fetch the list of departments from the server
+  $.ajax({
+      url: "libs/php/getAllDepartments.php", 
+      type: "POST",
+      dataType: "json",
+      success: function (response) {
+          if (response.status.code === "200") {
+              let departments = response.data;
+
+              // Populate the department dropdown with fetched data
+              departments.forEach(function (department) {
+                  $("#addDepartment").append(
+                      $("<option>", {
+                          value: department.id,
+                          text: department.name
+                      })
+                  );
+              });
+
+              // Open the add personnel modal
+              $("#addDepartmentModal").modal("show");
+          } else {
+              console.error("Error fetching Department:", response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX Error:", textStatus, errorThrown);
+      }
+  });
 }
+
+
+
+
+$("#addDepartmentForm").on("submit", function (e) {
+console.log("Form submitted!");
+
+e.preventDefault();
+
+let formData = $(this).serialize();
+console.log(formData);
+
+
+$.ajax({
+    url: $(this).attr("action"),
+    type: $(this).attr("method"),
+    data: formData,
+    dataType: "json",
+    success: function (response) {
+        // Handle success response
+        if (response.status.code === "200") {
+            console.log("Department added successfully:", response);
+
+            // Close the add personnel modal
+            $("#addDepartmentModal").modal("hide");
+        
+        } else {
+            console.error("Department addition error:", response.status.description);
+            // Display an error message or take appropriate action
+        }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.responseText);
+        console.error("AJAX error:", textStatus, errorThrown);
+    }
+  });
+});
+
 
 function openAddLocationModal() {
   console.log("Open the add modal for location")
