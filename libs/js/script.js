@@ -118,7 +118,7 @@ function listLocationTable(dataFound) {
             '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="' + location.id + '">' +
             '<i class="fa-solid fa-pencil fa-fw"></i>' +
             '</button>' +
-            '<button type="button" class="btn btn-primary btn-sm">' +
+            '<button type="button" class="btn btn-primary btn-sm deleteLocationBtn" data-id="' + location.id + '">' +
             '<i class="fa-solid fa-trash fa-fw"></i>' +
             '</button>' +
             '</td>' +
@@ -979,7 +979,7 @@ $("#locationsBtn").click(function () {
 
 //__________________________________DELETE___________________________________________________
 
-// Use event delegation for dynamic elements
+//____________________________________deletePersonnel_______________________________________
 $('#personnel-tab-pane table tbody').on('click', '.deletePersonnelBtn', function () {
   var personnelId = $(this).data('id');
   var currentRow = $(this).closest('tr'); // Store the reference to the current row
@@ -1028,6 +1028,36 @@ $('#departments-tab-pane table tbody').on('click', '.deleteDepartmentBtn', funct
               currentRow.remove();
           } else {
               console.error('Department deletion error:', response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error('AJAX error:', textStatus, errorThrown);
+      }
+  });
+});
+
+//_________________________________deleteLocation_____________________________________________
+// Use event delegation for dynamic elements
+$('#locations-tab-pane table tbody').on('click', '.deleteLocationBtn', function () {
+  var locationId = $(this).data('id');
+  var currentRow = $(this).closest('tr'); // Store the reference to the current row
+
+  $.ajax({
+      url: 'libs/php/deleteLocationByID.php',
+      type: 'POST',
+      data: { id: locationId },
+      dataType: 'json',
+      success: function (response) {
+          // Handle success response
+          if (response.status.code === '200') {
+              console.log('Location deleted successfully:', response);
+
+              // Remove the row from the table immediately
+              currentRow.remove();
+          } else {
+              console.error('Location deletion error:', response.status.description);
               // Display an error message or take appropriate action
           }
       },
