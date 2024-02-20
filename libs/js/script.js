@@ -480,12 +480,15 @@ function filterTable(selectedDepartments, selectedLocations) {
   });
 
   function openAddPersonnelModal() {
+    $("#addPersonnelFirstName").val("");
+    $("#addPersonnelLastName").val("");
+    $("#addPersonnelJobTitle").val("");
+    $("#addPersonnelEmailAddress").val("");
+    $("#addPersonnelDepartment").val("");
 
-
-    // Fetch the list of departments from the server
     $.ajax({
         url: "libs/php/getAllDepartments.php", 
-        type: "POST",
+        type: "GET",
         dataType: "json",
         success: function (response) {
             if (response.status.code === "200") {
@@ -538,9 +541,6 @@ $("#addPersonnelForm").on("submit", function (e) {
               // Close the add personnel modal
               $("#addPersonnelModal").modal("hide");
 
-              // You might want to refresh the personnel table after adding a new entry
-              //listDepartmentTable(data);
-
           } else {
               console.error("Personnel addition error:", response.status.description);
               // Display an error message or take appropriate action
@@ -555,9 +555,13 @@ $("#addPersonnelForm").on("submit", function (e) {
 
 //_________________________________________addDepartment_____________________________________________
 function openAddDepartmentModal() {
+  $("#addDepartmentName").val("");
+  $("#addDepartmentLocationName").val("");
 
+  // Open the add location modal
+  $("#addDepartmentModal").modal("show");
 
-  // Fetch the list of departments from the server
+  /*
   $.ajax({
       url: "libs/php/getAllDepartments.php", 
       type: "POST",
@@ -588,6 +592,7 @@ function openAddDepartmentModal() {
           console.error("AJAX Error:", textStatus, errorThrown);
       }
   });
+  */
 }
 
 
@@ -628,9 +633,48 @@ $.ajax({
 });
 
 
+//_____________________________________openAddLocationModal_________________________________________
+
 function openAddLocationModal() {
-  console.log("Open the add modal for location")
+  $("#addLocationName").val("");
+
+  $("#addLocationModal").modal("show");
 }
+
+
+$("#addLocationForm").on("submit", function (e) {
+  e.preventDefault();
+
+  let formData = $(this).serialize();
+
+  $.ajax({
+      url: $(this).attr("action"),
+      type: $(this).attr("method"),
+      data: formData,
+      dataType: "json",
+      success: function (response) {
+          // Handle success response
+          if (response.status.code === "200") {
+              console.log("Location added successfully:", response);
+
+              // Close the add location modal
+              $("#addLocationModal").modal("hide");
+
+          } else {
+              console.error("Location addition error:", response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error("AJAX error:", textStatus, errorThrown);
+      }
+  });
+});
+
+
+
+//____________________________________________________________________________________//
 
 
 $("#personnelBtn").click(function () {
@@ -653,6 +697,9 @@ $("#locationsBtn").click(function () {
   refreshLocationsTable();
   
 });
+
+
+
 
 //___________________________________________EDIT________________________________________________
   

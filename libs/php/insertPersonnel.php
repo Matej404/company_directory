@@ -1,8 +1,5 @@
 <?php
 
-	// Example use from browser
-	// http://localhost/companydirectory/libs/php/insertPersonnel.php?firstName=John&lastName=Doe&jobTitle=Developer&emailAddress=johndoe@example.com&departmentID=<id>
-
 	// Remove next two lines for production
 	
 	ini_set('display_errors', 'On');
@@ -10,7 +7,6 @@
 
 	$executionStartTime = microtime(true);
 	
-	// This includes the login details
 	
 	include("config.php");
 
@@ -34,12 +30,10 @@
 
 	}	
 
-	// SQL statement accepts parameters and is prepared to avoid SQL injection.
-	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
 	$query = $conn->prepare('INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES(?,?,?,?,?)');
 
-	$query->bind_param("ssssi", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['jobTitle'], $_REQUEST['email'], $_REQUEST['departmentID']);
+	$query->bind_param("ssssi", $_REQUEST['addPersonnelFirstName'], $_REQUEST['addPersonnelLastName'], $_REQUEST['addPersonnelJobTitle'], $_REQUEST['addPersonnelEmailAddress'], $_REQUEST['addPersonnelDepartment']);
 
 	$query->execute();
 	
