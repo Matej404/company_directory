@@ -556,7 +556,7 @@ $("#addPersonnelForm").on("submit", function (e) {
 //_________________________________________addDepartment_____________________________________________
 function openAddDepartmentModal() {
   $("#addDepartmentName").val("");
-  $("#addDepartmentLocationName").val("");
+  //$("#addDepartmentLocationName").val("");
 
   // Open the add location modal
   $("#addDepartmentModal").modal("show");
@@ -976,6 +976,68 @@ $("#locationsBtn").click(function () {
     });
     
   });
+
+//__________________________________DELETE___________________________________________________
+
+// Use event delegation for dynamic elements
+$('#personnel-tab-pane table tbody').on('click', '.deletePersonnelBtn', function () {
+  var personnelId = $(this).data('id');
+  var currentRow = $(this).closest('tr'); // Store the reference to the current row
+
+  $.ajax({
+      url: 'libs/php/deletePersonnelByID.php',
+      type: 'POST',
+      data: { id: personnelId },
+      dataType: 'json',
+      success: function (response) {
+          // Handle success response
+          if (response.status.code === '200') {
+              console.log('Personnel deleted successfully:', response);
+
+              // Remove the row from the table immediately
+              currentRow.remove();
+          } else {
+              console.error('Personnel deletion error:', response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error('AJAX error:', textStatus, errorThrown);
+      }
+  });
+});
+
+
+//__________________________________deleteDepartment_________________________________________
+$('#departments-tab-pane table tbody').on('click', '.deleteDepartmentBtn', function () {
+  var departmentId = $(this).data('id');
+  var currentRow = $(this).closest('tr'); // Store the reference to the current row
+
+  $.ajax({
+      url: 'libs/php/deleteDepartmentByID.php',
+      type: 'POST',
+      data: { id: departmentId },
+      dataType: 'json',
+      success: function (response) {
+          // Handle success response
+          if (response.status.code === '200') {
+              console.log('Department deleted successfully:', response);
+
+              // Remove the row from the table immediately
+              currentRow.remove();
+          } else {
+              console.error('Department deletion error:', response.status.description);
+              // Display an error message or take appropriate action
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+          console.error('AJAX error:', textStatus, errorThrown);
+      }
+  });
+});
+
 
 });
 
