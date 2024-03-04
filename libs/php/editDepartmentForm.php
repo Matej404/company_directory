@@ -55,7 +55,8 @@ $selectedDepartmentID = $_POST['editDepartment'];
 
 // Fetch the selected department name based on the ID
 $query = $conn->prepare('SELECT name FROM department WHERE id=?');
-$query->bind_param("i", $selectedDepartmentID);
+$query->bind_param("i", $departmentID);
+
 $query->execute();
 $result = $query->get_result();
 

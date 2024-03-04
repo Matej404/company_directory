@@ -223,19 +223,24 @@
         <form id="editDepartmentForm" action="libs/php/editDepartmentForm.php" method="POST">
 
           <input type="hidden" id="editDepartmentID" name="editDepartmentID">   
-
+<!--
           <div class="form-floating mb-3">
             <input type="text" class="form-control" id="editDepartmentLocationName" name="editDepartmentLocationName" placeholder="Location" required>
             <label for="editDepartmentLocationName">Location</label>
           </div>
-
-          <div class="form-floating">
-            <select class="form-select" id="editDepartment" name="editDepartment" placeholder="Department">
-            </select>
+-->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="editDepartment" name="editDepartment" placeholder="Department" required>
             <label for="editDepartment">Department</label>
-          </div> 
-          
+          </div>
 
+   <!--      
+          <div class="form-floating mb-3">
+            <select class="form-select" id="editDepartmentLocationName" name="editDepartmentLocationName" placeholder="Location">
+            </select>
+            <label for="editDepartmentLocationName">Location</label>
+          </div> 
+        -->
         </form>
 
       </div>
@@ -375,19 +380,12 @@
             <input type="text" class="form-control" id="addDepartmentName" name="addDepartmentName" placeholder="Location" required>
             <label for="addDepartmentName">Department</label>
           </div> 
-<!--
+
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="addDepartmentLocationName" name="addDepartmentLocationName" placeholder="Location" required>
-            <label for="addDepartmentLocationName">Location</label>
-          </div>
-          -->
-<!--
-          <div class="form-floating">
-            <select class="form-select" id="addDepartment" name="addDepartment" placeholder="Department">
+            <select class="form-select" id="addDepartmentLocationName" name="addDepartmentLocationName" placeholder="Location">
             </select>
-            <label for="addDepartment">Department</label>
+            <label for="addDepartmentLocationName">Location</label>
           </div> 
-        -->  
 
         </form>
 

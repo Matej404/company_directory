@@ -541,6 +541,7 @@ $("#addPersonnelForm").on("submit", function (e) {
               // Close the add personnel modal
               $("#addPersonnelModal").modal("hide");
 
+              refreshPersonnelTable()
           } else {
               console.error("Personnel addition error:", response.status.description);
               // Display an error message or take appropriate action
@@ -553,29 +554,29 @@ $("#addPersonnelForm").on("submit", function (e) {
   });
 });
 
+
 //_________________________________________addDepartment_____________________________________________
 function openAddDepartmentModal() {
   $("#addDepartmentName").val("");
-  //$("#addDepartmentLocationName").val("");
+  $("#addDepartmentLocationName").val("");
 
   // Open the add location modal
   $("#addDepartmentModal").modal("show");
 
-  /*
   $.ajax({
-      url: "libs/php/getAllDepartments.php", 
+      url: "libs/php/getAllLocations.php", 
       type: "POST",
       dataType: "json",
       success: function (response) {
           if (response.status.code === "200") {
-              let departments = response.data;
+              let locations = response.data;
 
               // Populate the department dropdown with fetched data
-              departments.forEach(function (department) {
-                  $("#addDepartment").append(
+              locations.forEach(function (location) {
+                  $("#addDepartmentLocationName").append(
                       $("<option>", {
-                          value: department.id,
-                          text: department.name
+                          value: location.id,
+                          text: location.name
                       })
                   );
               });
@@ -592,7 +593,7 @@ function openAddDepartmentModal() {
           console.error("AJAX Error:", textStatus, errorThrown);
       }
   });
-  */
+  
 }
 
 
@@ -620,6 +621,7 @@ $.ajax({
             // Close the add personnel modal
             $("#addDepartmentModal").modal("hide");
         
+            refreshDepartmentsTable();
         } else {
             console.error("Department addition error:", response.status.description);
             // Display an error message or take appropriate action
@@ -659,6 +661,8 @@ $("#addLocationForm").on("submit", function (e) {
 
               // Close the add location modal
               $("#addLocationModal").modal("hide");
+
+              refreshLocationsTable();
 
           } else {
               console.error("Location addition error:", response.status.description);
@@ -784,6 +788,8 @@ $("#locationsBtn").click(function () {
         
                         // Close the modal or perform any other actions as needed
                         $("#editPersonnelModal").modal("hide");
+
+                        refreshPersonnelTable();
                     } else {
                         // Handle the case where the server returns an error
                         console.error("Form submission error:", response.status.description);
@@ -818,12 +824,14 @@ $("#locationsBtn").click(function () {
           if (resultCode == 200) {
     
             $("#editDepartmentID").val(result.data[0].id);
+
+            $("#editDepartment").val(result.data[0].name);
     
-            
-            $("#editDepartment").html("");
+       /*     
+            $("#editDepartmentLocationName").html("");
     
-            $.each(result.data.allDepartments, function () {
-              $("#editDepartment").append(
+            $.each(result.data.locations, function () {
+              $("#editDepartmentLocationName").append(
                 $("<option>", {
                   value: this.id,
                   text: this.name
@@ -831,8 +839,8 @@ $("#locationsBtn").click(function () {
               );
             });
     
-            $("#editDepartment").val(result.data[0].id);
-               
+            $("#editDepartment").val(result.data[0].name);
+         */      
   
             $("#editDepartmentLocationName").val(result.data[0].locationName);
   
@@ -849,6 +857,7 @@ $("#locationsBtn").click(function () {
           );
         }
       });
+      
     });
     
   
@@ -879,6 +888,8 @@ $("#locationsBtn").click(function () {
           
                           // Close the modal or perform any other actions as needed
                           $("#editDepartmentModal").modal("hide");
+                          
+                          refreshDepartmentsTable();
                       } else {
                           // Handle the case where the server returns an error
                           console.error("Form submission error:", response.status.description);
@@ -963,6 +974,8 @@ $("#locationsBtn").click(function () {
         
                         // Close the modal or perform any other actions as needed
                         $("#editLocationModal").modal("hide");
+
+                        refreshLocationsTable();
                     } else {
                         // Handle the case where the server returns an error
                         console.error("Form submission error:", response.status.description);
