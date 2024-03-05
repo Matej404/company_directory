@@ -827,7 +827,7 @@ $("#locationsBtn").click(function () {
 
             $("#editDepartment").val(result.data[0].name);
     
-       /*     
+            
             $("#editDepartmentLocationName").html("");
     
             $.each(result.data.locations, function () {
@@ -839,10 +839,9 @@ $("#locationsBtn").click(function () {
               );
             });
     
-            $("#editDepartment").val(result.data[0].name);
-         */      
-  
-            $("#editDepartmentLocationName").val(result.data[0].locationName);
+
+            $("#editDepartmentLocationName").val(result.data[0].locationID);
+
   
             
           } else {
