@@ -30,10 +30,16 @@
 
 	}	
 
+	$firstName = $_REQUEST['addPersonnelFirstName'];
+	$lastName = $_REQUEST['addPersonnelLastName'];
+	$jobTitle = $_REQUEST['addPersonnelJobTitle'];
+	$email = $_REQUEST['addPersonnelEmailAddress'];
+	$department = $_REQUEST['addPersonnelDepartment'];
+
 
 	$query = $conn->prepare('INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES(?,?,?,?,?)');
 
-	$query->bind_param("ssssi", $_REQUEST['addPersonnelFirstName'], $_REQUEST['addPersonnelLastName'], $_REQUEST['addPersonnelJobTitle'], $_REQUEST['addPersonnelEmailAddress'], $_REQUEST['addPersonnelDepartment']);
+	$query->bind_param("ssssi", $firstName, $lastName, $jobTitle, $email, $department);
 
 	$query->execute();
 	

@@ -1080,7 +1080,6 @@ $('#locations-tab-pane table tbody').on('click', '.deleteLocationBtn', function 
   });
 });
 
-
 });
 
 

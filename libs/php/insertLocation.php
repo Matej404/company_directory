@@ -25,10 +25,11 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
-// SQL statement accepts parameters and is prepared to avoid SQL injection.
+$location = $_REQUEST['addLocationName'];
+
 $query = $conn->prepare('INSERT INTO location (name) VALUES(?)');
 
-$query->bind_param("s", $_REQUEST['addLocationName']);
+$query->bind_param("s", $location);
 
 $query->execute();
 

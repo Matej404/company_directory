@@ -34,12 +34,12 @@
 
 	}	
 
-	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
-	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
+	$department = $_REQUEST['addDepartmentName'];
+	$location = $_REQUEST['addDepartmentLocationName'];
 
 	$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES(?,?)');
 
-	$query->bind_param("si", $_REQUEST['addDepartmentName'], $_REQUEST['addDepartmentLocationName']);
+	$query->bind_param("si", $department, $location);
 
 	$query->execute();
 	
