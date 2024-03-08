@@ -381,6 +381,65 @@ function getLocationById(dataFound) {
 
 //___________________________________________________________________________________________________
 
+$.ajax({
+  url: "libs/php/getAllDepartments.php",
+  type: "GET",
+  dataType: "json",
+  success: function (result) {
+
+      if (result.status.code === "200") {
+
+          renderCheckboxes(result.data, "departmentCheckbox", "departmentCheckboxLabel");
+      } else {
+        
+          console.error("Error fetching department data:", result.status.description);
+      }
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.error("AJAX Error:", textStatus, errorThrown);
+  }
+});
+
+$.ajax({
+  url: "libs/php/getAllLocations.php", 
+  type: "GET",
+  dataType: "json",
+  success: function (result) {
+
+      if (result.status.code === "200") {
+
+          renderCheckboxes(result.data, "locationCheckbox", "locationCheckboxLabel");
+      } else {
+
+          console.error("Error fetching location data:", result.status.description);
+      }
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.responseText);
+      console.error("AJAX Error:", textStatus, errorThrown);
+  }
+});
+
+function renderCheckboxes(data, checkboxClass, labelClass) {
+  
+  let checkboxContainer = $("." + checkboxClass + "Container");
+  
+  checkboxContainer.empty();
+
+  $.each(data, function () {
+      checkboxContainer.append(
+          '<div class="form-check">' +
+          '<input class="form-check-input ' + checkboxClass + '" type="checkbox" value="' + this.id + '" id="' + checkboxClass + this.id + '">' +
+          '<label class="form-check-label ' + labelClass + '" for="' + checkboxClass + this.id + '">' +
+          this.name +
+          '</label>' +
+          '</div>'
+      );
+  });
+}
+
+
   
   $("#filterBtn").click(function () {
     
